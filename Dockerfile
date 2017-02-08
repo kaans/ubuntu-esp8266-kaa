@@ -8,7 +8,7 @@ FROM ubuntu:latest
 # Prerequisites
 
 RUN apt-get -y update
-RUN apt-get install -y autoconf libtool libtool-bin bison build-essential gawk git gperf flex texinfo libncurses5-dev libc6-dev python-serial libexpat-dev python-setuptools wget sudo nano
+RUN apt-get install -y autoconf libtool libtool-bin bison build-essential gawk git gperf flex texinfo libncurses5-dev libc6-dev python-serial libexpat-dev python-setuptools wget sudo nano cmake
 
 # Add esp user
 RUN adduser --disabled-password --gecos "" esp && su esp
@@ -60,3 +60,6 @@ RUN git clone https://github.com/RostakaGmfun/esptool.git
 WORKDIR esptool
 RUN python setup.py install --user
 
+# Start with user root
+USER root
+WORKDIR /opt

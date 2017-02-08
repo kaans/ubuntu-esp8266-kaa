@@ -1,0 +1,24 @@
+# Useful information
+
+ESP8266 tutorial: https://kaaproject.github.io/kaa/docs/v0.10.0/Programming-guide/Using-Kaa-endpoint-SDKs/C/SDK-ESP8266/
+C/C++ build configuration: http://docs.kaaproject.org/pages/viewpage.action?pageId=16417635
+Data collection example: https://kaaproject.github.io/kaa/docs/v0.10.0//Programming-guide/Key-platform-features/Data-collection/
+C doc: http://kaaproject.github.io/kaa/autogen-docs/client-c/v0.10.0/files.html
+
+# Get the example from the git repository
+
+URL: https://github.com/kaaproject/kaa/blob/v0.10.0/doc/Programming-guide/Using-Kaa-endpoint-SDKs/C/SDK-ESP8266/attach/esp8266-sample/
+
+Git clone URL: https://github.com/kaaproject/kaa.git
+
+# Share drive where kaa repository lies with docker
+
+Goto Docker settings -> Shared drives and share the corresponding drive
+
+# Run image
+
+docker run -v "<Path to cloned git repository>\kaa\doc\Programming-guide\Using-Kaa-endpoint-SDKs\C\SDK-ESP8266\attach\esp8266-sample:/opt/app" -ti kaans/ubuntu-esp8266-kaa
+
+-> Now your sample project is mounted to /opt/app
+
+# Compile the project
