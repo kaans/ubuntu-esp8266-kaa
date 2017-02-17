@@ -5,31 +5,45 @@ C/C++ build configuration: http://docs.kaaproject.org/pages/viewpage.action?page
 Data collection example: https://kaaproject.github.io/kaa/docs/v0.10.0//Programming-guide/Key-platform-features/Data-collection/
 C doc: http://kaaproject.github.io/kaa/autogen-docs/client-c/v0.10.0/files.html
 
+
 # Get the example from the git repository
 
 URL: https://github.com/kaaproject/kaa/blob/v0.10.0/doc/Programming-guide/Using-Kaa-endpoint-SDKs/C/SDK-ESP8266/attach/esp8266-sample/
 
 Git clone URL: https://github.com/kaaproject/kaa.git
 
+Switch to branch "develop-1.0.0" after cloning the repository. (Tested commit hash is 4e39525fc7a082457dfc4a5e8968f51665594c94; If the most current state of the GIT repository is not working, try to explizitly checkout this hash)
+
+
 # Share drive where kaa repository lies with docker
 
 Goto Docker settings -> Shared drives and share the corresponding drive
 
+
 # Run image
 
-docker run -v "<Path to cloned git repository>\kaa\doc\Programming-guide\Using-Kaa-endpoint-SDKs\C\SDK-ESP8266\attach\esp8266-sample:/opt/app" -ti --privileged kaans/ubuntu-esp8266-kaa
+docker run -v "<Path to cloned git repository>\kaa\doc\Programming-guide\Using-Kaa-endpoint-SDKs\C\SDK-ESP8266\attach\esp8266-sample:/opt/app" -ti kaans/ubuntu-esp8266-kaa-git
 
 -> Now your sample project is mounted to /opt/app
+
+
+# Create the endpoint SDK
+
+- Create the endpoint SDK for C language
+- Create a folder named "libs/kaa" in the sample project folder
+- Copy the contents of the SDK into the folder "libs/kaa"
+
 
 # Compile the project
 
 Run the following commands from the directory /opt/app as user espespto :
 
+cd /opt/app
 rm -rf build
 mkdir -p build
 cd build
 cmake .. \
-        -DCMAKE_TOOLCHAIN_FILE=../kaa/toolchains/esp8266.cmake \
+        -DCMAKE_TOOLCHAIN_FILE=../libs/kaa/toolchains/esp8266.cmake \
         -DKAA_PLATFORM=esp8266 \
         -DCMAKE_BUILD_TYPE=MinSizeRel \
         -DWITH_EXTENSION_CONFIGURATION=OFF \
@@ -42,11 +56,18 @@ cmake .. \
         -DKAA_MAX_LOG_LEVEL=3
 make
 
+
 # Flash the firmware
 
-Goto the directory /opt/app and execute:
+Goto the directory /opt/app/build and execute the following command so that the generated ELF file (kaa_demo) is converted to flashable images:
 
-esptool.py elf2image build/kaa_demo
+esptool.py elf2image kaa_demo
+
+The following does not work in windows because it is not possible to include USB devices in Hyper-V. It might work under Linux if the /dev/bus/usb directory is passed on to the Docker VM. To do this, add "-v /dev/bus/usb:/dev/bus/usb" to the docker run command.
+ 
 sudo esptool.py write_flash 0x00000 build/kaa_demo-0x00000.bin 0x40000 build/kaa_demo-0x40000.bin
 
 
+# Print memory listing of generated ELF file
+
+xtensa-lx106-elf-objdump -x kaa_demo > listing.txt
